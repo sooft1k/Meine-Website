@@ -3,11 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GabaWeb Studio – Webdesign das verkauft | Österreich</title>
+    <title>GabaWeb – Faire Websites für österreichische Unternehmen</title>
     <meta
       name="description"
-      content="Professionelles Webdesign für lokale Unternehmen in Österreich. Mehr Kunden durch Websites, die aktiv verkaufen. Friseure, Restaurants, Handwerker."
+      content="Professionelle Websites ab 590 €. Direkt vom Entwickler, ohne Agentur-Aufschlag. Lennard Gaba (17) baut moderne Websites für lokale Unternehmen in Österreich – ehrlich, schnell, persönlich."
     />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#07090e" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -87,6 +92,91 @@
         --t-fast: 0.18s var(--ease);
         --t-med: 0.32s var(--ease);
         --t-slow: 0.55s var(--ease-out);
+      }
+
+      /* ═══════════════════════════════════════
+   PAGE SYSTEM (SPA Router)
+═══════════════════════════════════════ */
+      .page {
+        display: none;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.5s var(--ease),
+          transform 0.5s var(--ease);
+        will-change: opacity, transform;
+      }
+      .page.active {
+        display: block;
+      }
+      .page.entering {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      .page.entered {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Stagger flow effect - children animate in sequence */
+      .page.entered .flow-item {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .flow-item {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.6s var(--ease-out),
+          transform 0.6s var(--ease-out);
+      }
+      .flow-item:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .flow-item:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .flow-item:nth-child(3) {
+        transition-delay: 0.25s;
+      }
+      .flow-item:nth-child(4) {
+        transition-delay: 0.35s;
+      }
+      .flow-item:nth-child(5) {
+        transition-delay: 0.45s;
+      }
+      .flow-item:nth-child(6) {
+        transition-delay: 0.55s;
+      }
+      .flow-item:nth-child(7) {
+        transition-delay: 0.65s;
+      }
+      .flow-item:nth-child(8) {
+        transition-delay: 0.75s;
+      }
+
+      /* Page transition overlay */
+      .page-transition-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-base);
+        z-index: 999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s var(--ease);
+      }
+      .page-transition-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Active nav state */
+      .nav-links a.active,
+      .mobile-menu a.active {
+        color: var(--gold-l);
+      }
+      .nav-links a.active::after {
+        opacity: 1 !important;
       }
 
       /* ─── RESET ─── */
@@ -208,8 +298,33 @@
         color: var(--text-1);
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         letter-spacing: -0.3px;
+        text-decoration: none;
+        transition: opacity 0.2s var(--ease);
+      }
+      .nav-logo:hover {
+        opacity: 0.85;
+      }
+      .nav-logo-img {
+        height: 36px;
+        width: auto;
+        display: block;
+        flex-shrink: 0;
+        filter: drop-shadow(0 0 12px rgba(212, 163, 60, 0.25));
+      }
+      .nav-logo-text {
+        display: inline-block;
+        background: linear-gradient(
+          120deg,
+          var(--text-1) 0%,
+          var(--text-1) 50%,
+          var(--gold-l) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
       }
       .nav-logo .logo-dot {
         width: 7px;
@@ -577,8 +692,6 @@
         padding: 7px 16px;
         border-radius: 100px;
         margin-bottom: 36px;
-        opacity: 0;
-        animation: fadeUp 0.7s var(--ease) 0.1s forwards;
       }
       .hero-badge-pulse {
         width: 6px;
@@ -601,8 +714,6 @@
       }
 
       .hero-headline {
-        opacity: 0;
-        animation: fadeUp 0.8s var(--ease) 0.2s forwards;
       }
       .hero-headline .line-1 {
         display: block;
@@ -614,16 +725,12 @@
       .hero-sub {
         margin: 28px 0 44px;
         max-width: 480px;
-        opacity: 0;
-        animation: fadeUp 0.7s var(--ease) 0.35s forwards;
       }
 
       .hero-actions {
         display: flex;
         gap: 16px;
         flex-wrap: wrap;
-        opacity: 0;
-        animation: fadeUp 0.7s var(--ease) 0.48s forwards;
       }
 
       .hero-stats {
@@ -632,8 +739,6 @@
         margin-top: 64px;
         padding-top: 40px;
         border-top: 1px solid var(--border);
-        opacity: 0;
-        animation: fadeUp 0.7s var(--ease) 0.6s forwards;
       }
       .hero-stat-num {
         font-family: var(--font-display);
@@ -1079,6 +1184,90 @@
         margin-top: 2px;
       }
 
+      /* ─── COMPARE TABLE ─── */
+      .compare-table {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .compare-header {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 8px;
+        padding: 0 0 14px 0;
+        border-bottom: 1px solid var(--border-m);
+        margin-bottom: 4px;
+      }
+      .compare-col {
+        font-family: var(--font-ui);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        text-align: center;
+        padding: 8px 6px;
+        border-radius: 6px;
+      }
+      .compare-col-them {
+        color: var(--text-3);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .compare-col-me {
+        color: var(--gold-l);
+        background: var(--gold-10);
+        border: 1px solid var(--border-gold);
+      }
+      .compare-row {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 8px;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .compare-row.last {
+        border-bottom: none;
+      }
+      .compare-row-label {
+        font-family: var(--font-ui);
+        font-size: 13px;
+        color: var(--text-2);
+        font-weight: 500;
+      }
+      .compare-cell {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        text-align: center;
+        padding: 8px 6px;
+        font-weight: 500;
+      }
+      .compare-them {
+        color: var(--text-3);
+        text-decoration: line-through;
+        text-decoration-color: rgba(255, 255, 255, 0.15);
+      }
+      .compare-me {
+        color: var(--text-1);
+        font-weight: 600;
+      }
+      .compare-note {
+        margin-top: 24px;
+        padding: 18px 20px;
+        background: var(--gold-10);
+        border: 1px solid var(--border-gold);
+        border-radius: var(--r-md);
+        font-family: var(--font-ui);
+        font-size: 14px;
+        color: var(--text-1);
+        line-height: 1.6;
+      }
+      .compare-note strong {
+        color: var(--gold-l);
+        font-weight: 600;
+      }
+
       /* ═══════════════════════════════════════
    PORTFOLIO / CASE STUDIES
 ═══════════════════════════════════════ */
@@ -1208,6 +1397,41 @@
         border: 1px solid var(--border);
         padding: 4px 10px;
         border-radius: 100px;
+      }
+
+      /* ─── PORTFOLIO DISCLAIMER ─── */
+      .portfolio-disclaimer {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-top: 56px;
+        padding: 22px 26px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-10),
+          rgba(74, 143, 219, 0.04)
+        );
+        border: 1px solid var(--border-gold);
+        border-radius: var(--r-lg);
+        max-width: 760px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .portfolio-disclaimer-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+      .portfolio-disclaimer p {
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.65;
+        color: var(--text-2);
+        margin: 0;
+      }
+      .portfolio-disclaimer strong {
+        color: var(--gold-l);
+        font-weight: 600;
       }
 
       /* ═══════════════════════════════════════
@@ -2032,7 +2256,25 @@
         color: var(--text-1);
         display: flex;
         align-items: center;
-        gap: 7px;
+        gap: 10px;
+      }
+      .footer-logo-img {
+        height: 32px;
+        width: auto;
+        display: block;
+        filter: drop-shadow(0 0 10px rgba(212, 163, 60, 0.2));
+      }
+      .footer-logo-text {
+        background: linear-gradient(
+          120deg,
+          var(--text-1) 0%,
+          var(--text-1) 50%,
+          var(--gold-l) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
       }
       .footer-links {
         display: flex;
@@ -2073,39 +2315,25 @@
         }
       }
 
-      /* ─── SCROLL REVEAL ─── */
-      .reveal {
-        opacity: 0;
-        transform: translateY(28px);
-        transition:
-          opacity 0.65s var(--ease),
-          transform 0.65s var(--ease);
-      }
-      .reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .reveal-left {
-        opacity: 0;
-        transform: translateX(-28px);
-        transition:
-          opacity 0.65s var(--ease),
-          transform 0.65s var(--ease);
-      }
-      .reveal-left.visible {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      /* ─── SCROLL REVEAL (legacy classes - now handled by .flow-item) ─── */
+      .reveal,
+      .reveal-left,
       .reveal-right {
-        opacity: 0;
-        transform: translateX(28px);
-        transition:
-          opacity 0.65s var(--ease),
-          transform 0.65s var(--ease);
-      }
-      .reveal-right.visible {
         opacity: 1;
-        transform: translateX(0);
+        transform: none;
+      }
+      /* Override card initial-hidden states - flow-item handles animation now */
+      .case-card,
+      .service-card,
+      .process-step,
+      .pricing-card,
+      .problem-item {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      /* Restore hover lift for case-card */
+      .case-card:hover {
+        transform: translateY(-6px) !important;
       }
 
       /* ═══════════════════════════════════════
@@ -2185,6 +2413,13 @@
         .hamburger {
           display: flex;
         }
+        .nav-logo {
+          font-size: 18px;
+          gap: 8px;
+        }
+        .nav-logo-img {
+          height: 30px;
+        }
         section {
           padding: 70px 0;
         }
@@ -2245,17 +2480,17 @@
     <!-- ═══════════ NAV ═══════════ -->
     <nav id="nav">
       <div class="container nav-inner">
-        <a href="#" class="nav-logo">
-          <span class="logo-dot"></span>
-          GabaWeb Studio
+        <a href="#" class="nav-logo" aria-label="GabaWeb – Startseite">
+          <img src="assets/logo.png" alt="" class="nav-logo-img" />
+          <span class="nav-logo-text">GabaWeb</span>
         </a>
         <ul class="nav-links">
-          <li><a href="#portfolio">Projekte</a></li>
-          <li><a href="#services">Leistungen</a></li>
-          <li><a href="#process">Ablauf</a></li>
-          <li><a href="#about">Studio</a></li>
-          <li><a href="#pricing">Preise</a></li>
-          <li><a href="#contact" class="nav-cta-btn">Anfrage starten →</a></li>
+          <li><a href="#story">Meine Story</a></li>
+          <li><a href="#vergleich">Vergleich</a></li>
+          <li><a href="#leistungen">Leistungen</a></li>
+          <li><a href="#preise">Preise</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#kontakt" class="nav-cta-btn">Anfrage starten →</a></li>
         </ul>
         <div class="hamburger" id="hamburger">
           <span></span><span></span><span></span>
@@ -2266,1174 +2501,1291 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
       <span class="mobile-menu-close" onclick="closeMobile()">✕</span>
-      <a href="#portfolio" onclick="closeMobile()">Projekte</a>
-      <a href="#services" onclick="closeMobile()">Leistungen</a>
-      <a href="#process" onclick="closeMobile()">Ablauf</a>
-      <a href="#about" onclick="closeMobile()">Studio</a>
-      <a href="#pricing" onclick="closeMobile()">Preise</a>
-      <a href="#contact" onclick="closeMobile()">Anfrage starten</a>
+      <a href="#story" onclick="closeMobile()">Meine Story</a>
+      <a href="#vergleich" onclick="closeMobile()">Vergleich</a>
+      <a href="#leistungen" onclick="closeMobile()">Leistungen</a>
+      <a href="#preise" onclick="closeMobile()">Preise</a>
+      <a href="#faq" onclick="closeMobile()">FAQ</a>
+      <a href="#kontakt" onclick="closeMobile()">Anfrage starten</a>
     </div>
 
-    <!-- ═══════════ HERO ═══════════ -->
-    <section id="hero">
-      <div class="hero-grid-bg"></div>
-      <div class="orb-1 hero-orb"></div>
-      <div class="orb-2 hero-orb"></div>
-      <div class="container">
-        <div class="hero-layout">
-          <div class="hero-left">
-            <div class="hero-badge">
-              <span class="hero-badge-pulse"></span>
-              Webdesign Studio · Österreich
-            </div>
+    <!-- ═══════════ PAGE: HOME (Hero + Ticker) ═══════════ -->
+    <div class="page" id="page-home" data-page="home">
+      <!-- ═══════════ HERO ═══════════ -->
+      <section id="hero">
+        <div class="hero-grid-bg"></div>
+        <div class="orb-1 hero-orb"></div>
+        <div class="orb-2 hero-orb"></div>
+        <div class="container">
+          <div class="hero-layout">
+            <div class="hero-left">
+              <div class="hero-badge">
+                <span class="hero-badge-pulse"></span>
+                17 Jahre · Schüler · aus Österreich
+              </div>
 
-            <h1 class="display-xl hero-headline">
-              <span class="line-1">Websites die</span>
-              <span class="line-2 text-gradient text-italic">verkaufen.</span>
-              <span class="line-1">Nicht nur existieren.</span>
-            </h1>
+              <h1 class="display-xl hero-headline">
+                <span class="line-1">Eine echte Website</span>
+                <span class="line-2 text-gradient text-italic"
+                  >ab 590&nbsp;€.</span
+                >
+                <span class="line-1">Nicht ab 5.000.</span>
+              </h1>
 
-            <p class="body-lg hero-sub">
-              Wir transformieren lokale Unternehmen in Österreich in digitale
-              Magneten. Mit Websites, die Vertrauen aufbauen, Besucher
-              überzeugen und Anfragen generieren – jeden Tag.
-            </p>
+              <p class="body-lg hero-sub">
+                Ich bin Lennard, 17, und baue Websites für lokale Unternehmen in
+                Österreich. Ohne Agentur-Aufschlag, ohne Zwischenhändler, ohne
+                6.000-€-Rechnungen. Direkt von mir – modern, schnell,
+                persönlich.
+              </p>
 
-            <div class="hero-actions">
-              <a href="#contact" class="btn btn-gold">
-                ✦ Kostenlose Website-Analyse
-              </a>
-              <a href="#portfolio" class="btn btn-ghost"> Projekte ansehen </a>
-            </div>
+              <div class="hero-actions">
+                <a href="#kontakt" class="btn btn-gold">
+                  ✦ Kostenloses Angebot anfragen
+                </a>
+                <a href="#story" class="btn btn-ghost"> Meine Story </a>
+              </div>
 
-            <div class="hero-stats">
-              <div>
-                <span class="hero-stat-num" data-count="340">0</span>
-                <div class="hero-stat-label">
-                  % mehr Anfragen<br />im Schnitt
+              <div class="hero-stats">
+                <div>
+                  <span class="hero-stat-num" data-count="590" data-suffix=" €"
+                    >0</span
+                  >
+                  <div class="hero-stat-label">
+                    Startpreis<br />statt 5.000 €+
+                  </div>
+                </div>
+                <div>
+                  <span class="hero-stat-num" data-count="14" data-suffix=""
+                    >0</span
+                  >
+                  <div class="hero-stat-label">Tage<br />Lieferzeit ⌀</div>
+                </div>
+                <div>
+                  <span class="hero-stat-num" data-count="100" data-suffix="%"
+                    >0</span
+                  >
+                  <div class="hero-stat-label">
+                    handgeschrieben<br />kein Baukasten
+                  </div>
                 </div>
               </div>
-              <div>
-                <span class="hero-stat-num" data-count="48">0</span>
-                <div class="hero-stat-label">
-                  Stunden bis zur<br />ersten Änderung
-                </div>
-              </div>
-              <div>
-                <span class="hero-stat-num" data-count="100">0</span>
-                <div class="hero-stat-label">
-                  % Mobile-First<br />Entwicklung
-                </div>
-              </div>
             </div>
-          </div>
 
-          <div class="hero-right">
-            <div class="metric-float metric-float-1">
-              <div class="metric-num">+340%</div>
-              <div class="metric-label">Online-Anfragen</div>
-              <div class="metric-trend">↑ In 30 Tagen</div>
-            </div>
-            <div class="browser-mockup">
-              <div class="browser-bar">
-                <div class="browser-dots">
-                  <div class="browser-dot"></div>
-                  <div class="browser-dot"></div>
-                  <div class="browser-dot"></div>
-                </div>
-                <div class="browser-url">
-                  <span class="lock">🔒</span>
-                  salon-beispiel.at
-                </div>
+            <div class="hero-right">
+              <div class="metric-float metric-float-1">
+                <div class="metric-num" style="color: var(--gold-l)">−85%</div>
+                <div class="metric-label">Günstiger als Agentur</div>
+                <div class="metric-trend">↓ Ehrliche Preise</div>
               </div>
-              <div class="browser-content">
-                <div class="mock-hero-bar">
-                  <div class="mock-line lg"></div>
-                  <div class="mock-line md"></div>
-                  <div style="display: flex; gap: 8px; margin-top: 6px">
-                    <div class="mock-line gold"></div>
+              <div class="browser-mockup">
+                <div class="browser-bar">
+                  <div class="browser-dots">
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                    <div class="browser-dot"></div>
+                  </div>
+                  <div class="browser-url">
+                    <span class="lock">🔒</span>
+                    ihr-unternehmen.at
+                  </div>
+                </div>
+                <div class="browser-content">
+                  <div class="mock-hero-bar">
+                    <div class="mock-line lg"></div>
+                    <div class="mock-line md"></div>
+                    <div style="display: flex; gap: 8px; margin-top: 6px">
+                      <div class="mock-line gold"></div>
+                      <div
+                        class="mock-line sm"
+                        style="
+                          height: 28px;
+                          border-radius: 6px;
+                          background: var(--border-m);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <div class="mock-cards">
                     <div
-                      class="mock-line sm"
+                      class="mock-card"
                       style="
-                        height: 28px;
-                        border-radius: 6px;
-                        background: var(--border-m);
+                        background: linear-gradient(
+                          135deg,
+                          var(--bg-raised),
+                          rgba(212, 163, 60, 0.05)
+                        );
+                      "
+                    >
+                      ✂️
+                    </div>
+                    <div
+                      class="mock-card"
+                      style="
+                        background: linear-gradient(
+                          135deg,
+                          var(--bg-raised),
+                          rgba(74, 143, 219, 0.05)
+                        );
+                      "
+                    >
+                      ⭐
+                    </div>
+                    <div class="mock-card">📅</div>
+                  </div>
+                  <div class="mock-section">
+                    <div class="mock-text-block">
+                      <div class="mock-line lg"></div>
+                      <div class="mock-line md"></div>
+                      <div class="mock-line sm"></div>
+                      <div class="mock-line md"></div>
+                    </div>
+                    <div
+                      style="
+                        width: 100px;
+                        height: 80px;
+                        background: var(--bg-raised);
+                        border-radius: 8px;
+                        border: 1px solid var(--border);
+                        flex-shrink: 0;
                       "
                     ></div>
                   </div>
                 </div>
-                <div class="mock-cards">
-                  <div
-                    class="mock-card"
-                    style="
-                      background: linear-gradient(
-                        135deg,
-                        var(--bg-raised),
-                        rgba(212, 163, 60, 0.05)
-                      );
-                    "
-                  >
-                    ✂️
-                  </div>
-                  <div
-                    class="mock-card"
-                    style="
-                      background: linear-gradient(
-                        135deg,
-                        var(--bg-raised),
-                        rgba(74, 143, 219, 0.05)
-                      );
-                    "
-                  >
-                    ⭐
-                  </div>
-                  <div class="mock-card">📅</div>
-                </div>
-                <div class="mock-section">
-                  <div class="mock-text-block">
-                    <div class="mock-line lg"></div>
-                    <div class="mock-line md"></div>
-                    <div class="mock-line sm"></div>
-                    <div class="mock-line md"></div>
-                  </div>
-                  <div
-                    style="
-                      width: 100px;
-                      height: 80px;
-                      background: var(--bg-raised);
-                      border-radius: 8px;
-                      border: 1px solid var(--border);
-                      flex-shrink: 0;
-                    "
-                  ></div>
-                </div>
               </div>
-            </div>
-            <div class="metric-float metric-float-2">
-              <div
-                class="metric-num"
-                style="font-size: 20px; color: var(--sap-l)"
-              >
-                ★ 5.0
-              </div>
-              <div class="metric-label">Kundenbewertung</div>
-              <div class="metric-trend" style="color: var(--sap-l)">
-                3 neue Bewertungen
+              <div class="metric-float metric-float-2">
+                <div
+                  class="metric-num"
+                  style="font-size: 20px; color: var(--sap-l)"
+                >
+                  ✓ Persönlich
+                </div>
+                <div class="metric-label">Direkter Kontakt</div>
+                <div class="metric-trend" style="color: var(--sap-l)">
+                  Du redest mit mir, nicht mit einem Account-Manager
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ═══════════ TICKER ═══════════ -->
-    <div class="ticker-section">
-      <div class="ticker-track">
-        <!-- First set -->
-        <div class="ticker-item">
-          <strong>Friseur · Salon Elegance Wien</strong>
-          <span class="ticker-sep"></span>
-          +340% Anfragen in 30 Tagen
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Restaurant · Trattoria da Marco</strong>
-          <span class="ticker-sep"></span>
-          +180% Tischreservierungen
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Handwerker · Maurer & Söhne GmbH</strong>
-          <span class="ticker-sep"></span>
-          Seite 1 bei Google in 60 Tagen
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Kosmetikstudio · Beauty First Graz</strong>
-          <span class="ticker-sep"></span>
-          +220% Terminbuchungen online
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Elektriker · Steiner Elektro Linz</strong>
-          <span class="ticker-sep"></span>
-          3× mehr Anfragen pro Woche
-          <span class="ticker-sep"></span>
-        </div>
-        <!-- Duplicate for seamless loop -->
-        <div class="ticker-item">
-          <strong>Friseur · Salon Elegance Wien</strong>
-          <span class="ticker-sep"></span>
-          +340% Anfragen in 30 Tagen
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Restaurant · Trattoria da Marco</strong>
-          <span class="ticker-sep"></span>
-          +180% Tischreservierungen
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Handwerker · Maurer & Söhne GmbH</strong>
-          <span class="ticker-sep"></span>
-          Seite 1 bei Google in 60 Tagen
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Kosmetikstudio · Beauty First Graz</strong>
-          <span class="ticker-sep"></span>
-          +220% Terminbuchungen online
-          <span class="ticker-sep"></span>
-        </div>
-        <div class="ticker-item">
-          <strong>Elektriker · Steiner Elektro Linz</strong>
-          <span class="ticker-sep"></span>
-          3× mehr Anfragen pro Woche
-          <span class="ticker-sep"></span>
+      <!-- ═══════════ TICKER ═══════════ -->
+      <div class="ticker-section">
+        <div class="ticker-track">
+          <!-- First set -->
+          <div class="ticker-item">
+            <strong>Ehrliche Preise</strong>
+            <span class="ticker-sep"></span>
+            ab 590 € statt 5.000 €
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Direktkontakt</strong>
+            <span class="ticker-sep"></span>
+            Du redest mit dem Entwickler
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Schnelle Lieferung</strong>
+            <span class="ticker-sep"></span>
+            1–3 Wochen statt Monate
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Made in Austria</strong>
+            <span class="ticker-sep"></span>
+            Aus Niederösterreich
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Code statt Baukasten</strong>
+            <span class="ticker-sep"></span>
+            Sauber, schnell, individuell
+            <span class="ticker-sep"></span>
+          </div>
+          <!-- Duplicate for seamless loop -->
+          <div class="ticker-item">
+            <strong>Ehrliche Preise</strong>
+            <span class="ticker-sep"></span>
+            ab 590 € statt 5.000 €
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Direktkontakt</strong>
+            <span class="ticker-sep"></span>
+            Du redest mit dem Entwickler
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Schnelle Lieferung</strong>
+            <span class="ticker-sep"></span>
+            1–3 Wochen statt Monate
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Made in Austria</strong>
+            <span class="ticker-sep"></span>
+            Aus Niederösterreich
+            <span class="ticker-sep"></span>
+          </div>
+          <div class="ticker-item">
+            <strong>Code statt Baukasten</strong>
+            <span class="ticker-sep"></span>
+            Sauber, schnell, individuell
+            <span class="ticker-sep"></span>
+          </div>
         </div>
       </div>
     </div>
+    <!-- end page-home -->
 
-    <!-- ═══════════ PROBLEM / WHY ═══════════ -->
-    <section id="problem">
-      <div class="container">
-        <div class="problem-grid">
-          <div>
-            <span class="label reveal">Das Problem</span>
-            <h2 class="display-lg reveal">
-              Die meisten Websites<br /><span class="text-gradient text-italic"
-                >kosten Geld.</span
-              ><br />Unsere verdienen es.
-            </h2>
+    <!-- ═══════════ PAGE: VERGLEICH ═══════════ -->
+    <div class="page" id="page-vergleich" data-page="vergleich">
+      <!-- ═══════════ VERGLEICH ═══════════ -->
+      <section id="vergleich">
+        <div class="container">
+          <div class="problem-grid">
+            <div>
+              <span class="label reveal">Der Vergleich</span>
+              <h2 class="display-lg reveal">
+                Warum Agenturen<br /><span class="text-gradient text-italic"
+                  >5.000 € verlangen.</span
+                ><br />Und ich nicht muss.
+              </h2>
+              <p
+                class="body-lg reveal"
+                style="max-width: 460px; margin-top: 20px"
+              >
+                Eine ehrliche Antwort: Ich bin 17 und gehe noch zur Schule. Das
+                hier ist mein Sidehustle, nicht mein Lebensunterhalt. Keine
+                Miete für ein Büro, kein Account-Manager, kein Marketing-Team –
+                nur ich, mein Code und dein Projekt.
+              </p>
+
+              <div class="problem-list">
+                <div class="problem-item">
+                  <div class="problem-icon">🏢</div>
+                  <div class="problem-text">
+                    <h4>Keine Agentur-Strukturen</h4>
+                    <p>
+                      Agenturen zahlen Büros, Mitarbeiter, Geschäftsführer.
+                      Diese Kosten landen auf deiner Rechnung. Bei mir nicht.
+                    </p>
+                  </div>
+                </div>
+                <div class="problem-item">
+                  <div class="problem-icon">💬</div>
+                  <div class="problem-text">
+                    <h4>Direkter Draht zu mir</h4>
+                    <p>
+                      Kein Projektmanager, der zwischen dir und dem Entwickler
+                      übersetzt. Du schreibst mir, ich antworte – meistens in
+                      wenigen Stunden.
+                    </p>
+                  </div>
+                </div>
+                <div class="problem-item">
+                  <div class="problem-icon">⚡</div>
+                  <div class="problem-text">
+                    <h4>Tempo statt Bürokratie</h4>
+                    <p>
+                      Keine Meetings, kein Genehmigungsprozess, kein Hin-und-Her
+                      zwischen Abteilungen. Anfrage Montag, erste Entwürfe oft
+                      schon Mittwoch.
+                    </p>
+                  </div>
+                </div>
+                <div class="problem-item">
+                  <div class="problem-icon">🎯</div>
+                  <div class="problem-text">
+                    <h4>Echte Motivation</h4>
+                    <p>
+                      Für eine Agentur bist du Auftrag Nr. 47. Für mich bist du
+                      eines der Projekte, mit denen ich mir gerade einen Namen
+                      aufbaue – ich gebe alles.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="reveal-right">
+              <div class="proof-card">
+                <div class="compare-table">
+                  <div class="compare-header">
+                    <div class="compare-col-label"></div>
+                    <div class="compare-col compare-col-them">Agentur</div>
+                    <div class="compare-col compare-col-me">Ich</div>
+                  </div>
+
+                  <div class="compare-row">
+                    <div class="compare-row-label">Preis Landingpage</div>
+                    <div class="compare-cell compare-them">2.500–5.000 €</div>
+                    <div class="compare-cell compare-me">ab 590 €</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-row-label">Mehrseitige Website</div>
+                    <div class="compare-cell compare-them">5.000–9.000 €</div>
+                    <div class="compare-cell compare-me">ab 890 €</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-row-label">Ansprechpartner</div>
+                    <div class="compare-cell compare-them">Account-Manager</div>
+                    <div class="compare-cell compare-me">Direkt mit mir</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-row-label">Lieferzeit</div>
+                    <div class="compare-cell compare-them">2–4 Monate</div>
+                    <div class="compare-cell compare-me">1–3 Wochen</div>
+                  </div>
+                  <div class="compare-row">
+                    <div class="compare-row-label">Code</div>
+                    <div class="compare-cell compare-them">Oft Baukasten</div>
+                    <div class="compare-cell compare-me">Handgeschrieben</div>
+                  </div>
+                  <div class="compare-row last">
+                    <div class="compare-row-label">Antwortzeit</div>
+                    <div class="compare-cell compare-them">2–5 Werktage</div>
+                    <div class="compare-cell compare-me">Meist &lt; 24 h</div>
+                  </div>
+                </div>
+
+                <div class="compare-note">
+                  <strong>Der Haken?</strong> Es gibt keinen. Du bekommst exakt
+                  die gleiche Qualität – nur ohne Agentur-Aufschlag.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- end page-vergleich -->
+
+    <!-- ═══════════ PAGE: LEISTUNGEN (Services + Process + Portfolio) ═══════════ -->
+    <div class="page" id="page-leistungen" data-page="leistungen">
+      <!-- ═══════════ FÜR WEN ═══════════ -->
+      <section id="portfolio">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-header-flex">
+              <div>
+                <span class="label reveal">Für wen ich baue</span>
+                <h2 class="display-lg reveal">
+                  Lokale Unternehmen.<br /><span
+                    class="text-gradient text-italic"
+                    >Ehrliche Preise.</span
+                  >
+                </h2>
+              </div>
+              <a href="#kontakt" class="btn btn-arrow reveal">
+                Anfrage starten <span class="arrow">→</span>
+              </a>
+            </div>
             <p
               class="body-lg reveal"
-              style="max-width: 440px; margin-top: 20px"
+              style="max-width: 560px; margin-top: 16px"
             >
-              Eine schöne Website reicht nicht. Besucher müssen zu Kunden werden
-              – durch psychologisch kluge Struktur, Vertrauenssignale und klare
-              Handlungsaufforderungen.
+              Ich baue Websites für kleine und mittlere Unternehmen in
+              Österreich, die endlich eine moderne Online-Präsenz wollen – ohne
+              dafür ein kleines Vermögen zu zahlen.
             </p>
+          </div>
 
-            <div class="problem-list">
-              <div class="problem-item">
-                <div class="problem-icon">🔍</div>
-                <div class="problem-text">
-                  <h4>Google findet Sie nicht</h4>
-                  <p>
-                    80% der Kunden suchen lokale Anbieter online. Ohne SEO sind
-                    Sie unsichtbar – egal wie gut Ihr Service ist.
-                  </p>
+          <div class="case-grid">
+            <!-- Branche 1 -->
+            <div class="case-card" style="transition-delay: 0ms">
+              <div
+                class="case-thumb"
+                style="background: linear-gradient(135deg, #0f1420, #1a1030)"
+              >
+                ✂️
+                <span class="case-industry">Friseure & Beauty</span>
+              </div>
+              <div class="case-body">
+                <h3 class="case-title">Salon, Kosmetik, Nagelstudio</h3>
+                <p class="case-problem">
+                  Eine moderne Website mit Galerie, Online-Terminanfrage und
+                  Google-Maps-Einbindung. So finden dich Kunden in deiner Stadt
+                  – und buchen direkt.
+                </p>
+                <div class="case-result">
+                  <div class="case-result-num">ab 590 €</div>
+                  <div class="case-result-desc">
+                    Einseitige Landingpage mit allem, was lokale Beauty-Betriebe
+                    brauchen.
+                  </div>
+                </div>
+                <div class="case-tags">
+                  <span class="tag">Galerie</span>
+                  <span class="tag">Kontaktformular</span>
+                  <span class="tag">Mobile-First</span>
                 </div>
               </div>
-              <div class="problem-item">
-                <div class="problem-icon">📱</div>
-                <div class="problem-text">
-                  <h4>Mobile Nutzung: 78% der Suchanfragen</h4>
-                  <p>
-                    Wenn Ihre Website am Handy nicht überzeugt, verlieren Sie
-                    täglich potenzielle Kunden an die Konkurrenz.
-                  </p>
+            </div>
+
+            <!-- Branche 2 -->
+            <div class="case-card" style="transition-delay: 120ms">
+              <div
+                class="case-thumb"
+                style="background: linear-gradient(135deg, #140a00, #251500)"
+              >
+                🍕
+                <span class="case-industry">Gastronomie</span>
+              </div>
+              <div class="case-body">
+                <h3 class="case-title">Restaurant, Café, Bar</h3>
+                <p class="case-problem">
+                  Digitale Speisekarte, Reservierungsformular, Öffnungszeiten,
+                  Anfahrt. Alles auf einer Seite, schnell ladend, perfekt am
+                  Handy lesbar.
+                </p>
+                <div class="case-result">
+                  <div class="case-result-num">ab 890 €</div>
+                  <div class="case-result-desc">
+                    Mehrseitige Website inkl. Speisekarte, Galerie und
+                    Reservierungssystem.
+                  </div>
+                </div>
+                <div class="case-tags">
+                  <span class="tag">Speisekarte</span>
+                  <span class="tag">Reservierung</span>
+                  <span class="tag">Google Maps</span>
                 </div>
               </div>
-              <div class="problem-item">
-                <div class="problem-icon">⏱️</div>
-                <div class="problem-text">
-                  <h4>3 Sekunden entscheiden</h4>
-                  <p>
-                    Lädt Ihre Seite zu langsam oder wirkt unseriös, klickt der
-                    Besucher weg – zu Ihrem Mitbewerber.
-                  </p>
-                </div>
+            </div>
+
+            <!-- Branche 3 -->
+            <div class="case-card" style="transition-delay: 240ms">
+              <div
+                class="case-thumb"
+                style="background: linear-gradient(135deg, #0a150a, #102010)"
+              >
+                🔧
+                <span class="case-industry">Handwerk & Service</span>
               </div>
-              <div class="problem-item">
-                <div class="problem-icon">💬</div>
-                <div class="problem-text">
-                  <h4>Kein klarer nächster Schritt</h4>
-                  <p>
-                    Besucher wollen geführt werden. Ohne starke CTAs verlassen
-                    sie die Seite ohne Kontakt aufzunehmen.
-                  </p>
+              <div class="case-body">
+                <h3 class="case-title">Maler, Elektriker, Installateur</h3>
+                <p class="case-problem">
+                  Vertrauenswürdige Website mit Leistungsübersicht,
+                  Referenzbildern und Anfrageformular. Damit dich Google und
+                  Kunden ernst nehmen.
+                </p>
+                <div class="case-result">
+                  <div class="case-result-num">ab 890 €</div>
+                  <div class="case-result-desc">
+                    Mehrseitige Handwerker-Website mit lokalem SEO und
+                    Anfrage-Tracking.
+                  </div>
+                </div>
+                <div class="case-tags">
+                  <span class="tag">Lokales SEO</span>
+                  <span class="tag">Referenzen</span>
+                  <span class="tag">Anfrageformular</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="reveal-right">
-            <div class="proof-card">
-              <div class="proof-quote-mark">"</div>
-              <p class="proof-quote">
-                Ich hatte eine Website, aber
-                <em>keine einzige Anfrage kam darüber</em>. Seit Gabriel meine
-                Seite komplett neu gebaut hat, rufen täglich 2–3 neue Kunden an.
-                Innerhalb der ersten zwei Wochen.
+          <div class="portfolio-disclaimer reveal">
+            <span class="portfolio-disclaimer-icon">💡</span>
+            <p>
+              <strong>Ehrlich gesagt:</strong> Ich baue gerade mein Portfolio
+              auf. Wer jetzt bei mir startet, profitiert von besonders fairen
+              Preisen – im Gegenzug darf ich das Projekt als Referenz zeigen.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ SERVICES ═══════════ -->
+      <section id="leistungen">
+        <div class="container">
+          <div class="services-layout">
+            <div class="services-intro">
+              <span class="label reveal">Leistungen</span>
+              <h2 class="display-md reveal">
+                Was du<br /><span class="text-gradient">bei mir</span
+                ><br />bekommst.
+              </h2>
+              <p
+                class="reveal"
+                style="
+                  font-size: 15px;
+                  color: var(--text-2);
+                  line-height: 1.7;
+                  margin-top: 20px;
+                "
+              >
+                Alles aus einer Hand. Kein Outsourcing, kein Zwischenhändler,
+                keine versteckten Kosten. Du redest mit mir, ich baue – fertig.
               </p>
-              <div class="proof-author">
-                <div class="proof-avatar">MK</div>
-                <div>
-                  <div class="proof-name">Markus K.</div>
-                  <div class="proof-role">
-                    Elektriker, Wien · Selbstständig seit 2018
+              <p class="services-cta-note reveal">
+                Jedes Projekt enthält direkten Kontakt, regelmäßige Updates und
+                eine Nachbesserungsphase nach dem Launch.
+              </p>
+              <a
+                href="#kontakt"
+                class="btn btn-gold reveal"
+                style="margin-top: 28px; display: inline-flex"
+              >
+                Kostenloses Erstgespräch
+              </a>
+            </div>
+
+            <div class="services-list">
+              <div class="service-card">
+                <div class="service-header">
+                  <div>
+                    <div class="service-icon-wrap">🖥️</div>
                   </div>
-                  <div class="proof-stars">★★★★★</div>
+                  <div class="service-num">01</div>
+                </div>
+                <div class="service-title">Webdesign & Entwicklung</div>
+                <p class="service-desc">
+                  Maßgeschneiderte Websites – kein Template, kein Baukasten,
+                  kein WordPress-Standard. Jedes Design wird auf dein
+                  Unternehmen zugeschnitten.
+                </p>
+                <div class="service-features">
+                  <div class="service-feat">
+                    Individuelles Layout & Farbkonzept
+                  </div>
+                  <div class="service-feat">Sauber geschriebener Code</div>
+                  <div class="service-feat">
+                    Animationen & moderne Interaktionen
+                  </div>
                 </div>
               </div>
-              <div class="proof-metrics">
-                <div class="proof-metric">
-                  <div class="proof-metric-num">+280%</div>
-                  <div class="proof-metric-label">Mehr Anfragen / Woche</div>
+
+              <div class="service-card">
+                <div class="service-header">
+                  <div><div class="service-icon-wrap">📱</div></div>
+                  <div class="service-num">02</div>
                 </div>
-                <div class="proof-metric">
-                  <div class="proof-metric-num">6 Wo.</div>
-                  <div class="proof-metric-label">Bis Seite 1 bei Google</div>
+                <div class="service-title">Mobile-First Entwicklung</div>
+                <p class="service-desc">
+                  Über 78% deiner Kunden suchen am Smartphone. Deine Website
+                  wird primär fürs Handy entwickelt – nicht nachträglich
+                  "responsive" gemacht.
+                </p>
+                <div class="service-features">
+                  <div class="service-feat">
+                    Entwicklung zuerst für Mobilgeräte
+                  </div>
+                  <div class="service-feat">
+                    Touch-optimierte Navigation & Buttons
+                  </div>
+                  <div class="service-feat">Perfekt auf jedem Gerät</div>
+                </div>
+              </div>
+
+              <div class="service-card">
+                <div class="service-header">
+                  <div><div class="service-icon-wrap">🔍</div></div>
+                  <div class="service-num">03</div>
+                </div>
+                <div class="service-title">
+                  Lokales SEO & Google-Sichtbarkeit
+                </div>
+                <p class="service-desc">
+                  Google Maps, lokale Suchergebnisse, strukturierte Daten –
+                  damit dich Kunden in deiner Stadt finden, bevor sie die
+                  Konkurrenz finden.
+                </p>
+                <div class="service-features">
+                  <div class="service-feat">Lokales SEO & Google Business</div>
+                  <div class="service-feat">Meta-Tags, Struktur & Schema</div>
+                  <div class="service-feat">Ladezeit unter 2 Sekunden</div>
+                </div>
+              </div>
+
+              <div class="service-card">
+                <div class="service-header">
+                  <div><div class="service-icon-wrap">💡</div></div>
+                  <div class="service-num">04</div>
+                </div>
+                <div class="service-title">Conversion-Design</div>
+                <p class="service-desc">
+                  Eine schöne Website allein bringt nichts. Jedes Element wird
+                  strategisch platziert – damit Besucher zu Kunden werden, nicht
+                  wieder wegklicken.
+                </p>
+                <div class="service-features">
+                  <div class="service-feat">
+                    Strategische Button-Platzierung
+                  </div>
+                  <div class="service-feat">
+                    Vertrauenssignale & Social Proof
+                  </div>
+                  <div class="service-feat">Optimierte Kontaktformulare</div>
+                </div>
+              </div>
+
+              <div class="service-card">
+                <div class="service-header">
+                  <div><div class="service-icon-wrap">🛠️</div></div>
+                  <div class="service-num">05</div>
+                </div>
+                <div class="service-title">Wartung & Updates</div>
+                <p class="service-desc">
+                  Nach dem Launch lasse ich dich nicht im Regen stehen. Auf
+                  Wunsch übernehme ich Updates, Anpassungen und
+                  Sicherheitsthemen – fair abgerechnet.
+                </p>
+                <div class="service-features">
+                  <div class="service-feat">Content-Updates & Anpassungen</div>
+                  <div class="service-feat">Technischer Support</div>
+                  <div class="service-feat">Optionale Wartungspakete</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ═══════════ PORTFOLIO ═══════════ -->
-    <section id="portfolio">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-header-flex">
-            <div>
-              <span class="label reveal">Case Studies</span>
-              <h2 class="display-lg reveal">
-                Echte Projekte.<br /><span class="text-gradient text-italic"
-                  >Echte Resultate.</span
+      <!-- ═══════════ PROCESS ═══════════ -->
+      <section id="process">
+        <div class="container">
+          <div
+            class="section-header"
+            style="text-align: center; max-width: 600px; margin: 0 auto 60px"
+          >
+            <span class="label reveal" style="justify-content: center"
+              >So läuft's ab</span
+            >
+            <h2 class="display-lg reveal">
+              Von der Idee zur<br /><span class="text-gradient text-italic"
+                >fertigen Website.</span
+              >
+            </h2>
+            <p class="body-lg reveal" style="margin-top: 16px">
+              Transparent, strukturiert und ohne Überraschungen. In 4 klaren
+              Schritten.
+            </p>
+          </div>
+
+          <div class="process-grid">
+            <div class="process-step">
+              <span class="process-step-num">01</span>
+              <span class="process-step-icon">🎯</span>
+              <div class="process-step-title">Erstgespräch</div>
+              <p class="process-step-desc">
+                30 Minuten, kostenlos, unverbindlich. Du erzählst mir von deinem
+                Unternehmen, ich höre zu und stelle Fragen. Kein Verkaufsdruck.
+              </p>
+              <div class="process-connector">→</div>
+            </div>
+            <div class="process-step">
+              <span class="process-step-num">02</span>
+              <span class="process-step-icon">🎨</span>
+              <div class="process-step-title">Konzept & Design</div>
+              <p class="process-step-desc">
+                Auf Basis unseres Gesprächs entwerfe ich ein Designkonzept. Du
+                siehst Entwürfe, bevor auch nur eine Zeile Code geschrieben
+                wird.
+              </p>
+              <div class="process-connector">→</div>
+            </div>
+            <div class="process-step">
+              <span class="process-step-num">03</span>
+              <span class="process-step-icon">⚡</span>
+              <div class="process-step-title">Entwicklung</div>
+              <p class="process-step-desc">
+                Sauberer Code, optimierte Performance, Mobile-First. Du bekommst
+                regelmäßige Updates und kannst jederzeit Feedback geben.
+              </p>
+              <div class="process-connector">→</div>
+            </div>
+            <div class="process-step">
+              <span class="process-step-num">04</span>
+              <span class="process-step-icon">🚀</span>
+              <div class="process-step-title">Launch & Support</div>
+              <p class="process-step-desc">
+                Ich übernehme das Online-Stellen inklusive technischem Setup.
+                Nach dem Launch bin ich weiter erreichbar – versprochen.
+              </p>
+              <div class="process-connector">→</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- end page-leistungen -->
+
+    <!-- ═══════════ PAGE: STORY ═══════════ -->
+    <div class="page" id="page-story" data-page="story">
+      <!-- ═══════════ ABOUT / STORY ═══════════ -->
+      <section id="story">
+        <div class="container">
+          <div class="about-grid">
+            <div class="about-visual-wrap reveal-left">
+              <div class="about-img">👨‍💻</div>
+              <div class="about-float-card">
+                <div class="about-float-num">17</div>
+                <div class="about-float-text">
+                  Jahre alt<br />und voll motiviert
+                </div>
+              </div>
+            </div>
+
+            <div class="about-content reveal-right">
+              <span class="label">Meine Story</span>
+              <h2 class="display-md">
+                Ehrlich gesagt:<br />ich bin
+                <span class="text-gradient text-italic">17.</span>
+              </h2>
+
+              <div class="about-philosophy">
+                <p>
+                  "Ich heiße Lennard Gaba, gehe noch zur Schule und liebe es,
+                  Websites zu bauen. Das hier ist mein Sidehustle – und genau
+                  deshalb kann ich Preise anbieten, bei denen jede Agentur
+                  passen muss."
+                </p>
+              </div>
+
+              <p
+                style="
+                  font-size: 15px;
+                  color: var(--text-2);
+                  line-height: 1.8;
+                  margin-bottom: 16px;
+                "
+              >
+                Ich habe gemerkt: Viele kleine Unternehmen in Österreich haben
+                entweder gar keine Website, eine veraltete Seite aus 2015 oder
+                sie haben für eine moderne Website 5.000–7.000 € hingelegt. Das
+                ist für eine Pizzeria oder einen Friseur einfach unrealistisch.
+              </p>
+              <p
+                style="
+                  font-size: 15px;
+                  color: var(--text-2);
+                  line-height: 1.8;
+                  margin-bottom: 16px;
+                "
+              >
+                Ich mache das anders. Ich bin jung, lerne gerade meine ersten
+                Branchen kennen und baue mir Schritt für Schritt ein Portfolio
+                auf. Statt fette Agentur-Preise zu verlangen, biete ich faire
+                Sätze – und gebe dafür alles, was ich kann.
+              </p>
+              <p
+                style="font-size: 15px; color: var(--text-2); line-height: 1.8"
+              >
+                Du bekommst keine schlechtere Website. Du bekommst die gleiche
+                Qualität, ohne den Aufschlag für Büro, Account-Manager und
+                Geschäftsführer-Gehalt. So einfach.
+              </p>
+
+              <div class="about-skill-grid">
+                <span class="skill-pill">HTML & CSS</span>
+                <span class="skill-pill">JavaScript</span>
+                <span class="skill-pill">Responsive Design</span>
+                <span class="skill-pill">SEO Basics</span>
+                <span class="skill-pill">UI/UX</span>
+                <span class="skill-pill">Figma</span>
+                <span class="skill-pill">Performance</span>
+                <span class="skill-pill">Conversion-Design</span>
+              </div>
+
+              <a href="#kontakt" class="btn btn-gold" style="margin-top: 36px">
+                Kostenloses Erstgespräch →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- end page-story -->
+
+    <!-- ═══════════ PAGE: PREISE ═══════════ -->
+    <div class="page" id="page-preise" data-page="preise">
+      <!-- ═══════════ PRICING ═══════════ -->
+      <section id="preise">
+        <div class="container">
+          <div class="pricing-header">
+            <span class="label reveal" style="justify-content: center"
+              >Preise</span
+            >
+            <h2 class="display-lg reveal">
+              Ehrlich.<br /><span class="text-gradient text-italic"
+                >Fair. Transparent.</span
+              >
+            </h2>
+            <p class="body-lg reveal" style="margin-top: 12px">
+              Keine versteckten Kosten, keine bösen Überraschungen. Alle Preise
+              sind Startpreise – dein individuelles Angebot besprechen wir
+              persönlich.
+            </p>
+          </div>
+
+          <div class="pricing-grid">
+            <!-- Starter -->
+            <div class="pricing-card">
+              <div class="pricing-plan">Starter</div>
+              <div class="pricing-price">
+                <span class="pricing-currency">ab</span>
+                <span class="pricing-amount">590</span>
+                <span class="pricing-currency">€</span>
+              </div>
+              <p class="pricing-desc">
+                Der perfekte Einstieg – eine moderne, mobile Landingpage, die
+                Vertrauen aufbaut und Anfragen bringt.
+              </p>
+              <ul class="pricing-features">
+                <li class="pricing-feat">
+                  <span class="check">✓</span>1-seitige Website (Landingpage)
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Mobile-optimiert & responsive
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Kontaktformular integriert
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Google Maps Einbindung
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>SEO-Grundoptimierung
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>2 Wochen Nachbesserung
+                </li>
+              </ul>
+              <a href="#kontakt" class="pricing-btn-secondary"
+                >Jetzt anfragen →</a
+              >
+            </div>
+
+            <!-- Business (Featured) -->
+            <div class="pricing-card featured">
+              <div class="pricing-badge">Beliebteste Wahl</div>
+              <div class="pricing-plan">Business</div>
+              <div class="pricing-price">
+                <span class="pricing-currency">ab</span>
+                <span class="pricing-amount">890</span>
+                <span class="pricing-currency">€</span>
+              </div>
+              <p class="pricing-desc">
+                Für Unternehmen, die online ernsthaft wachsen wollen – mit
+                mehreren Seiten, Galerie und allem was dazu gehört.
+              </p>
+              <ul class="pricing-features">
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Mehrseitige Website (bis 5 Seiten)
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Premium-Design & Animationen
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Mobile-First Entwicklung
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Erweiterte SEO-Optimierung
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Performance-Optimierung
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Google Analytics Setup
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>4 Wochen persönlicher Support
+                </li>
+              </ul>
+              <a href="#kontakt" class="pricing-btn-primary"
+                >Jetzt anfragen →</a
+              >
+            </div>
+
+            <!-- Premium -->
+            <div class="pricing-card">
+              <div class="pricing-plan">Premium</div>
+              <div class="pricing-price">
+                <span class="pricing-currency">ab</span>
+                <span class="pricing-amount">1.190</span>
+                <span class="pricing-currency">€</span>
+              </div>
+              <p class="pricing-desc">
+                Das volle Paket – mit allem, was ein wachsendes Unternehmen
+                braucht. Maßgeschneidert, mit langfristigem Support.
+              </p>
+              <ul class="pricing-features">
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Bis 10 Seiten, individuell
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Exklusives Custom-Design
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Buchungssystem auf Anfrage
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Vollständige SEO-Strategie
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Core Web Vitals Optimierung
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>3 Monate Support inklusive
+                </li>
+                <li class="pricing-feat">
+                  <span class="check">✓</span>Persönliches Onboarding
+                </li>
+              </ul>
+              <a href="#kontakt" class="pricing-btn-secondary"
+                >Jetzt anfragen →</a
+              >
+            </div>
+          </div>
+
+          <div class="pricing-guarantee reveal">
+            <div class="guarantee-icon">🛡️</div>
+            <div class="guarantee-text">
+              <strong>Mein Versprechen:</strong> Nachbesserungen sind in jedem
+              Paket enthalten. Du bekommst eine Website, mit der du 100%
+              zufrieden bist – oder ich arbeite weiter dran.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- end page-preise -->
+
+    <!-- ═══════════ PAGE: FAQ ═══════════ -->
+    <div class="page" id="page-faq" data-page="faq">
+      <!-- ═══════════ FAQ ═══════════ -->
+      <section id="faq">
+        <div class="container">
+          <div class="faq-layout">
+            <div class="faq-intro">
+              <span class="label reveal">Häufige Fragen</span>
+              <h2 class="display-md reveal">
+                Alles Wichtige<br /><span class="text-gradient text-italic"
+                  >auf einen Blick.</span
                 >
               </h2>
-            </div>
-            <a href="#contact" class="btn btn-arrow reveal">
-              Eigenes Projekt starten <span class="arrow">→</span>
-            </a>
-          </div>
-          <p class="body-lg reveal" style="max-width: 520px; margin-top: 16px">
-            Kein generisches Design. Jedes Projekt wird auf das Unternehmen, die
-            Zielgruppe und das Wachstumsziel zugeschnitten.
-          </p>
-        </div>
-
-        <div class="case-grid">
-          <!-- Case 1 -->
-          <div class="case-card" style="transition-delay: 0ms">
-            <div
-              class="case-thumb"
-              style="background: linear-gradient(135deg, #0f1420, #1a1030)"
-            >
-              ✂️
-              <span class="case-industry">Friseur & Wellness</span>
-            </div>
-            <div class="case-body">
-              <h3 class="case-title">Salon Elegance Wien</h3>
-              <p class="case-problem">
-                <strong style="color: var(--text-2)">Problem:</strong> Nur eine
-                veraltete Facebook-Seite, keine Online-Buchung, Neukunden
-                ausschließlich durch Empfehlungen – Wachstumsstagnation.
+              <p
+                class="reveal"
+                style="
+                  font-size: 15px;
+                  color: var(--text-2);
+                  line-height: 1.7;
+                  margin-top: 20px;
+                "
+              >
+                Noch Fragen? Schreib mir – ich antworte meist innerhalb von 24
+                Stunden. Versprochen.
               </p>
-              <div class="case-result">
-                <div class="case-result-num">+340%</div>
-                <div class="case-result-desc">
-                  Online-Anfragen im ersten Monat nach Launch – mit integrierter
-                  Terminbuchung und lokalem SEO.
+              <a
+                href="#kontakt"
+                class="btn btn-arrow reveal"
+                style="margin-top: 24px"
+              >
+                Direkt fragen <span class="arrow">→</span>
+              </a>
+            </div>
+
+            <div class="faq-list reveal">
+              <div class="faq-item">
+                <button class="faq-question">
+                  Du bist erst 17 – kann ich dir wirklich vertrauen?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Berechtigte Frage. Ehrlich gesagt: Genau deshalb sind meine
+                    Preise so fair – du bekommst die gleiche Qualität wie bei
+                    einer Agentur, aber ohne den Aufschlag. Wir starten immer
+                    mit einem unverbindlichen Gespräch. Du bezahlst 50% bei
+                    Projektstart und 50% erst bei Abnahme – wenn du nicht
+                    zufrieden bist, arbeite ich nach. Du hast also nichts zu
+                    verlieren. Und wenn meine Arbeit nicht überzeugt, brauchst
+                    du den Rest nicht zu bezahlen.
+                  </div>
                 </div>
               </div>
-              <div class="case-tags">
-                <span class="tag">Buchungssystem</span>
-                <span class="tag">Lokales SEO</span>
-                <span class="tag">Mobile-First</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Case 2 -->
-          <div class="case-card" style="transition-delay: 120ms">
-            <div
-              class="case-thumb"
-              style="background: linear-gradient(135deg, #140a00, #251500)"
-            >
-              🍕
-              <span class="case-industry">Gastronomie</span>
-            </div>
-            <div class="case-body">
-              <h3 class="case-title">Trattoria da Marco</h3>
-              <p class="case-problem">
-                <strong style="color: var(--text-2)">Problem:</strong>
-                Google-Maps-Profil ohne eigene Website, Speisekarte als schlecht
-                lesbares PDF, keine Möglichkeit zur Online-Reservierung.
-              </p>
-              <div class="case-result">
-                <div class="case-result-num">+180%</div>
-                <div class="case-result-desc">
-                  Tischreservierungen über die neue Website – mit digitaler
-                  Speisekarte und direktem Buchungsformular.
+              <div class="faq-item">
+                <button class="faq-question">
+                  Wie lange dauert die Entwicklung einer Website?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Eine Landingpage (Starter) dauert in der Regel 1–2 Wochen.
+                    Mehrseitige Websites (Business/Premium) 2–4 Wochen –
+                    abhängig vom Umfang und wie schnell du mir Content und
+                    Feedback gibst. Im Erstgespräch legen wir einen
+                    realistischen Zeitplan fest.
+                  </div>
                 </div>
               </div>
-              <div class="case-tags">
-                <span class="tag">Digitale Speisekarte</span>
-                <span class="tag">Reservierungssystem</span>
-                <span class="tag">Google Maps</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Case 3 -->
-          <div class="case-card" style="transition-delay: 240ms">
-            <div
-              class="case-thumb"
-              style="background: linear-gradient(135deg, #0a150a, #102010)"
-            >
-              🔧
-              <span class="case-industry">Handwerk & Bau</span>
-            </div>
-            <div class="case-body">
-              <h3 class="case-title">Maurer & Söhne GmbH</h3>
-              <p class="case-problem">
-                <strong style="color: var(--text-2)">Problem:</strong> Zehn
-                Jahre alte Website mit schlechter Darstellung auf Mobilgeräten,
-                Google-Ranking auf Seite 4, kaum Online-Anfragen.
-              </p>
-              <div class="case-result">
-                <div class="case-result-num">Seite 1</div>
-                <div class="case-result-desc">
-                  Bei Google für die wichtigsten lokalen Suchbegriffe –
-                  innerhalb von 60 Tagen nach Relaunch.
+              <div class="faq-item">
+                <button class="faq-question">
+                  Wie ist das mit der Schule? Hast du überhaupt Zeit?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Klar – ich plane Projekte so, dass sie zu meinem Schulalltag
+                    passen. Konkret heißt das: Ich nehme nur so viele Aufträge
+                    gleichzeitig an, wie ich auch sauber abliefern kann. Lieber
+                    etwas länger Vorlauf als schlechte Qualität. Antworten
+                    bekommst du trotzdem schnell – meistens innerhalb von 24
+                    Stunden.
+                  </div>
                 </div>
               </div>
-              <div class="case-tags">
-                <span class="tag">SEO-Strategie</span>
-                <span class="tag">Referenzprojekte</span>
-                <span class="tag">Performance</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════ SERVICES ═══════════ -->
-    <section id="services">
-      <div class="container">
-        <div class="services-layout">
-          <div class="services-intro">
-            <span class="label reveal">Leistungen</span>
-            <h2 class="display-md reveal">
-              Was wir für<br /><span class="text-gradient">Ihr Unternehmen</span
-              ><br />tun.
-            </h2>
-            <p
-              class="reveal"
-              style="
-                font-size: 15px;
-                color: var(--text-2);
-                line-height: 1.7;
-                margin-top: 20px;
-              "
-            >
-              Alles aus einer Hand – von der Strategie bis zum Go-Live. Kein
-              Zwischenhändler, keine langen Wartezeiten, keine unerwarteten
-              Kosten.
-            </p>
-            <p class="services-cta-note reveal">
-              Jeder Auftrag beinhaltet direkte Kommunikation, regelmäßige
-              Updates und eine Nachbesserungsphase nach dem Launch.
-            </p>
-            <a
-              href="#contact"
-              class="btn btn-gold reveal"
-              style="margin-top: 28px; display: inline-flex"
-            >
-              Kostenloses Erstgespräch
-            </a>
-          </div>
-
-          <div class="services-list">
-            <div class="service-card">
-              <div class="service-header">
-                <div>
-                  <div class="service-icon-wrap">🖥️</div>
-                </div>
-                <div class="service-num">01</div>
-              </div>
-              <div class="service-title">Webdesign & Entwicklung</div>
-              <p class="service-desc">
-                Maßgeschneiderte Websites – kein Template, keine Kompromisse.
-                Jedes Design entsteht mit klarem Fokus auf Ihr Unternehmen, Ihre
-                Zielgruppe und Ihre Ziele.
-              </p>
-              <div class="service-features">
-                <div class="service-feat">
-                  Individuelles Layout & Brand-Design
-                </div>
-                <div class="service-feat">Modernes Typografie-System</div>
-                <div class="service-feat">
-                  Animationen & Premium-Interaktionen
+              <div class="faq-item">
+                <button class="faq-question">
+                  Was brauche ich, um loszulegen?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Nicht viel. Ein kurzes Gespräch über dein Unternehmen, deine
+                    Ziele und deine Zielgruppe reicht als Start. Texte und
+                    Bilder kannst du selbst liefern – ich helfe dir aber auch
+                    dabei, falls nötig. Wir starten, wenn du bereit bist.
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div class="service-card">
-              <div class="service-header">
-                <div><div class="service-icon-wrap">📱</div></div>
-                <div class="service-num">02</div>
-              </div>
-              <div class="service-title">Mobile-First Entwicklung</div>
-              <p class="service-desc">
-                Mehr als 78% Ihrer Kunden suchen am Smartphone. Ihre Website
-                wird primär für Mobilgeräte entwickelt – nicht nachträglich
-                angepasst.
-              </p>
-              <div class="service-features">
-                <div class="service-feat">
-                  Entwicklung zuerst für Mobilgeräte
+              <div class="faq-item">
+                <button class="faq-question">
+                  Kann ich die Website nachher selbst bearbeiten?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Auf Wunsch ja. Ich kann deine Website so bauen, dass du
+                    Texte, Bilder und Inhalte selbst ändern kannst – ohne
+                    Programmierkenntnisse. Alternativ übernehme ich Updates für
+                    dich, fair abgerechnet.
+                  </div>
                 </div>
-                <div class="service-feat">
-                  Touch-optimierte Navigation & CTAs
+              </div>
+              <div class="faq-item">
+                <button class="faq-question">
+                  Wie funktioniert die Zahlung?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    50% Anzahlung zu Projektbeginn, 50% bei Abnahme und Go-Live.
+                    So haben wir beide Sicherheit. Keine versteckten Kosten –
+                    alles wird im Angebot transparent aufgeführt. Bezahlung per
+                    Überweisung.
+                  </div>
                 </div>
-                <div class="service-feat">Perfektes Bild auf jedem Gerät</div>
               </div>
-            </div>
-
-            <div class="service-card">
-              <div class="service-header">
-                <div><div class="service-icon-wrap">🔍</div></div>
-                <div class="service-num">03</div>
+              <div class="faq-item">
+                <button class="faq-question">
+                  Was ist, wenn ich mit dem Design nicht zufrieden bin?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Kein Problem. Jedes Paket beinhaltet eine
+                    Nachbesserungsphase. Wir arbeiten so lange zusammen, bis du
+                    100% zufrieden bist. Dein Feedback ist Teil des Prozesses,
+                    nicht ein Problem.
+                  </div>
+                </div>
               </div>
-              <div class="service-title">Lokales SEO & Google-Sichtbarkeit</div>
-              <p class="service-desc">
-                Google Maps, lokale Suchergebnisse, strukturierte Daten – wir
-                sorgen dafür, dass Ihre Kunden Sie finden, bevor sie die
-                Konkurrenz finden.
-              </p>
-              <div class="service-features">
-                <div class="service-feat">Lokales SEO & Google Business</div>
-                <div class="service-feat">Meta-Tags, Struktur & Schema</div>
-                <div class="service-feat">Ladezeit unter 2 Sekunden</div>
-              </div>
-            </div>
-
-            <div class="service-card">
-              <div class="service-header">
-                <div><div class="service-icon-wrap">💡</div></div>
-                <div class="service-num">04</div>
-              </div>
-              <div class="service-title">Conversion-Design</div>
-              <p class="service-desc">
-                Jedes Element Ihrer Seite ist strategisch platziert – um
-                Besucher in Anfragen zu verwandeln. Psychologisch fundiert,
-                nicht zufällig.
-              </p>
-              <div class="service-features">
-                <div class="service-feat">Strategische CTA-Platzierung</div>
-                <div class="service-feat">Vertrauenssignale & Social Proof</div>
-                <div class="service-feat">Optimierte Kontaktformulare</div>
-              </div>
-            </div>
-
-            <div class="service-card">
-              <div class="service-header">
-                <div><div class="service-icon-wrap">🛠️</div></div>
-                <div class="service-num">05</div>
-              </div>
-              <div class="service-title">Wartung & Weiterentwicklung</div>
-              <p class="service-desc">
-                Ihre Website ist kein einmaliges Projekt. Mit laufender
-                Betreuung bleibt sie aktuell, sicher und weiterentwickelt.
-              </p>
-              <div class="service-features">
-                <div class="service-feat">Content-Updates & Anpassungen</div>
-                <div class="service-feat">Technischer Support & Security</div>
-                <div class="service-feat">Monatliche Performance-Analyse</div>
+              <div class="faq-item">
+                <button class="faq-question">
+                  Übernimmst du auch Hosting und Domain?
+                  <span class="faq-chevron">▾</span>
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-inner">
+                    Ja. Ich berate dich bei der Wahl von Hosting und Domain und
+                    kann das technische Setup übernehmen. Auf Wunsch komplett –
+                    du bekommst eine fertige Website, online und einsatzbereit.
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <!-- end page-faq -->
 
-    <!-- ═══════════ PROCESS ═══════════ -->
-    <section id="process">
-      <div class="container">
-        <div
-          class="section-header"
-          style="text-align: center; max-width: 600px; margin: 0 auto 60px"
-        >
-          <span class="label reveal" style="justify-content: center"
-            >So arbeiten wir</span
+    <!-- ═══════════ PAGE: KONTAKT ═══════════ -->
+    <div class="page" id="page-kontakt" data-page="kontakt">
+      <!-- ═══════════ CONTACT ═══════════ -->
+      <section id="kontakt">
+        <div class="container">
+          <div
+            class="section-header"
+            style="text-align: center; max-width: 560px; margin: 0 auto 60px"
           >
-          <h2 class="display-lg reveal">
-            Von der Idee zur<br /><span class="text-gradient text-italic"
-              >fertigen Website.</span
+            <span class="label reveal" style="justify-content: center"
+              >Kontakt</span
             >
-          </h2>
-          <p class="body-lg reveal" style="margin-top: 16px">
-            Transparent, strukturiert und ohne Überraschungen. In 4 klaren
-            Schritten.
-          </p>
-        </div>
-
-        <div class="process-grid">
-          <div class="process-step">
-            <span class="process-step-num">01</span>
-            <span class="process-step-icon">🎯</span>
-            <div class="process-step-title">Strategiegespräch</div>
-            <p class="process-step-desc">
-              30 Minuten, kostenlos. Wir lernen Ihr Unternehmen, Ihre Ziele und
-              Ihre Zielgruppe kennen. Kein Verkaufsgespräch – echter Austausch.
-            </p>
-            <div class="process-connector">→</div>
-          </div>
-          <div class="process-step">
-            <span class="process-step-num">02</span>
-            <span class="process-step-icon">🎨</span>
-            <div class="process-step-title">Design & Konzept</div>
-            <p class="process-step-desc">
-              Auf Basis Ihres Briefings entsteht ein individuelles
-              Designkonzept. Sie sehen Entwürfe bevor auch nur eine Zeile Code
-              geschrieben wird.
-            </p>
-            <div class="process-connector">→</div>
-          </div>
-          <div class="process-step">
-            <span class="process-step-num">03</span>
-            <span class="process-step-icon">⚡</span>
-            <div class="process-step-title">Entwicklung</div>
-            <p class="process-step-desc">
-              Sauberer Code, optimierte Performance, Mobile-First. Sie erhalten
-              regelmäßige Updates und können jederzeit Feedback geben.
-            </p>
-            <div class="process-connector">→</div>
-          </div>
-          <div class="process-step">
-            <span class="process-step-num">04</span>
-            <span class="process-step-icon">🚀</span>
-            <div class="process-step-title">Launch & Support</div>
-            <p class="process-step-desc">
-              Go-Live inklusive technischem Setup. Nach dem Launch stehen wir
-              für Anpassungen und Fragen zur Verfügung. Sie sind nie allein.
-            </p>
-            <div class="process-connector">→</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════ ABOUT ═══════════ -->
-    <section id="about">
-      <div class="container">
-        <div class="about-grid">
-          <div class="about-visual-wrap reveal-left">
-            <div class="about-img">👨‍💻</div>
-            <div class="about-float-card">
-              <div class="about-float-num">100%</div>
-              <div class="about-float-text">
-                direkte Betreuung<br />ohne Zwischenschicht
-              </div>
-            </div>
-          </div>
-
-          <div class="about-content reveal-right">
-            <span class="label">Das Studio</span>
-            <h2 class="display-md">
-              Der Unterschied<br />ist
-              <span class="text-gradient text-italic">persönlich.</span>
-            </h2>
-
-            <div class="about-philosophy">
-              <p>
-                "GabaWeb Studio wurde aus einer einfachen Überzeugung gegründet:
-                Lokale Unternehmen in Österreich verdienen Websites, die genauso
-                hart arbeiten wie ihre Inhaber."
-              </p>
-            </div>
-
-            <p
-              style="
-                font-size: 15px;
-                color: var(--text-2);
-                line-height: 1.8;
-                margin-bottom: 16px;
-              "
-            >
-              Was mich von großen Agenturen unterscheidet: Sie arbeiten direkt
-              mit mir. Kein Account-Manager als Zwischenschicht, kein
-              Telefon-Pingpong, keine generischen Lösungen von der Stange.
-            </p>
-            <p
-              style="
-                font-size: 15px;
-                color: var(--text-2);
-                line-height: 1.8;
-                margin-bottom: 16px;
-              "
-            >
-              Ich nehme mir die Zeit, Ihr Unternehmen wirklich zu verstehen –
-              Ihre Zielgruppe, Ihre Stärken, Ihre Konkurrenz. Jede
-              Designentscheidung hat einen Grund. Jedes Element dient einem
-              Ziel.
-            </p>
-            <p style="font-size: 15px; color: var(--text-2); line-height: 1.8">
-              Das Ergebnis sind keine schönen Visitenkarten. Es sind
-              Verkaufsmaschinen, die rund um die Uhr für Ihr Unternehmen
-              arbeiten.
-            </p>
-
-            <div class="about-skill-grid">
-              <span class="skill-pill">HTML & CSS</span>
-              <span class="skill-pill">JavaScript</span>
-              <span class="skill-pill">Responsive Design</span>
-              <span class="skill-pill">SEO Strategie</span>
-              <span class="skill-pill">UI/UX Design</span>
-              <span class="skill-pill">Figma</span>
-              <span class="skill-pill">Performance</span>
-              <span class="skill-pill">Conversion Design</span>
-              <span class="skill-pill">Google Analytics</span>
-            </div>
-
-            <a href="#contact" class="btn btn-gold" style="margin-top: 36px">
-              Kostenloses Erstgespräch →
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════ PRICING ═══════════ -->
-    <section id="pricing">
-      <div class="container">
-        <div class="pricing-header">
-          <span class="label reveal" style="justify-content: center"
-            >Investition</span
-          >
-          <h2 class="display-lg reveal">
-            Transparent.<br /><span class="text-gradient text-italic"
-              >Fair. Klar.</span
-            >
-          </h2>
-          <p class="body-lg reveal" style="margin-top: 12px">
-            Alle Preise sind Startpreise – Ihr individuelles Angebot besprechen
-            wir persönlich.
-          </p>
-        </div>
-
-        <div class="pricing-grid">
-          <!-- Starter -->
-          <div class="pricing-card">
-            <div class="pricing-plan">Starter</div>
-            <div class="pricing-price">
-              <span class="pricing-currency">ab</span>
-              <span class="pricing-amount">499</span>
-              <span class="pricing-currency">€</span>
-            </div>
-            <p class="pricing-desc">
-              Der ideale Einstieg – eine professionelle, überzeugende Präsenz im
-              Netz, die Vertrauen aufbaut.
-            </p>
-            <ul class="pricing-features">
-              <li class="pricing-feat">
-                <span class="check">✓</span>1-seitige Website (Landingpage)
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Mobile-optimiert & responsive
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Kontaktformular integriert
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Google Maps Einbindung
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>SEO Grundoptimierung
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>2 Wochen Nachbesserung
-              </li>
-            </ul>
-            <a href="#contact" class="pricing-btn-secondary"
-              >Jetzt anfragen →</a
-            >
-          </div>
-
-          <!-- Business (Featured) -->
-          <div class="pricing-card featured">
-            <div class="pricing-badge">Beliebteste Wahl</div>
-            <div class="pricing-plan">Business</div>
-            <div class="pricing-price">
-              <span class="pricing-currency">ab</span>
-              <span class="pricing-amount">999</span>
-              <span class="pricing-currency">€</span>
-            </div>
-            <p class="pricing-desc">
-              Für Unternehmen, die online ernsthaft wachsen wollen – mit System,
-              Strategie und messbaren Ergebnissen.
-            </p>
-            <ul class="pricing-features">
-              <li class="pricing-feat">
-                <span class="check">✓</span>Mehrseitige Website (bis 5 Seiten)
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Premium-Design & Animationen
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Mobile-First Entwicklung
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Erweiterte SEO-Optimierung
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Performance-Optimierung
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Google Analytics Setup
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>4 Wochen persönlicher Support
-              </li>
-            </ul>
-            <a href="#contact" class="pricing-btn-primary">Jetzt anfragen →</a>
-          </div>
-
-          <!-- Premium -->
-          <div class="pricing-card">
-            <div class="pricing-plan">Premium</div>
-            <div class="pricing-price">
-              <span class="pricing-currency">ab</span>
-              <span class="pricing-amount">1.499</span>
-              <span class="pricing-currency">€</span>
-            </div>
-            <p class="pricing-desc">
-              Das vollständige Paket für maximale Marktpräsenz – mit allem, was
-              ein wachsendes Unternehmen braucht.
-            </p>
-            <ul class="pricing-features">
-              <li class="pricing-feat">
-                <span class="check">✓</span>Bis 10 Seiten, individuell
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Exklusives Custom-Design
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Buchungssystem / Shop-Integration
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Vollständige SEO-Strategie
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Core Web Vitals Optimierung
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>3 Monate Wartung inklusive
-              </li>
-              <li class="pricing-feat">
-                <span class="check">✓</span>Persönliches Onboarding
-              </li>
-            </ul>
-            <a href="#contact" class="pricing-btn-secondary"
-              >Jetzt anfragen →</a
-            >
-          </div>
-        </div>
-
-        <div class="pricing-guarantee reveal">
-          <div class="guarantee-icon">🛡️</div>
-          <div class="guarantee-text">
-            <strong>Zufriedenheitsgarantie:</strong> Nachbesserungen sind in
-            jedem Paket enthalten. Sie erhalten eine Website, mit der Sie 100%
-            zufrieden sind – oder wir arbeiten weiter daran.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════ FAQ ═══════════ -->
-    <section id="faq">
-      <div class="container">
-        <div class="faq-layout">
-          <div class="faq-intro">
-            <span class="label reveal">Häufige Fragen</span>
-            <h2 class="display-md reveal">
-              Alles Wichtige<br /><span class="text-gradient text-italic"
-                >auf einen Blick.</span
+            <h2 class="display-lg reveal">
+              Bereit zu<br /><span class="text-gradient text-italic"
+                >starten?</span
               >
             </h2>
-            <p
-              class="reveal"
-              style="
-                font-size: 15px;
-                color: var(--text-2);
-                line-height: 1.7;
-                margin-top: 20px;
-              "
-            >
-              Weitere Fragen? Schreiben Sie mir – ich antworte innerhalb von 24
-              Stunden.
+            <p class="body-lg reveal" style="margin-top: 12px">
+              Kostenlose Anfrage – keine Verpflichtung. Antwort meist innerhalb
+              von 24 Stunden.
             </p>
-            <a
-              href="#contact"
-              class="btn btn-arrow reveal"
-              style="margin-top: 24px"
-            >
-              Direkt fragen <span class="arrow">→</span>
-            </a>
           </div>
 
-          <div class="faq-list reveal">
-            <div class="faq-item">
-              <button class="faq-question">
-                Wie lange dauert die Entwicklung einer Website?
-                <span class="faq-chevron">▾</span>
-              </button>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Für eine Landingpage (Starter-Paket) dauert es in der Regel
-                  1–2 Wochen. Für mehrseitige Websites (Business/Premium) 2–4
-                  Wochen, abhängig vom Umfang und wie schnell Content und
-                  Feedback bereitgestellt werden. Im Erstgespräch besprechen wir
-                  einen realistischen Zeitplan.
+          <div class="contact-grid">
+            <div class="reveal-left">
+              <div class="contact-info-header">
+                <h3
+                  class="display-md"
+                  style="font-size: clamp(24px, 2.5vw, 32px)"
+                >
+                  Schreib mir.<br />Direkt.
+                </h3>
+              </div>
+              <div class="contact-items">
+                <div class="contact-item">
+                  <div class="contact-icon">✉️</div>
+                  <div>
+                    <h4>E-Mail</h4>
+                    <a href="mailto:gabalennard@gmail.com"
+                      >gabalennard@gmail.com</a
+                    >
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-icon">📞</div>
+                  <div>
+                    <h4>Telefon</h4>
+                    <a href="tel:+436769325769">0676 9325769</a>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-icon">📍</div>
+                  <div>
+                    <h4>Standort</h4>
+                    <p>Niederösterreich — Projekte österreichweit</p>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-icon">⏱️</div>
+                  <div>
+                    <h4>Antwortzeit</h4>
+                    <p>Meist innerhalb von 24 Stunden</p>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-icon">💬</div>
+                  <div>
+                    <h4>Erstgespräch</h4>
+                    <p>Kostenlos & unverbindlich — ca. 30 Minuten</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question">
-                Was brauche ich, um loszulegen?
-                <span class="faq-chevron">▾</span>
-              </button>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Nicht viel. Ein kurzes Gespräch über Ihr Unternehmen, Ihre
-                  Ziele und Ihre Zielgruppe reicht als Start. Texte und Bilder
-                  können Sie selbst liefern – ich unterstütze Sie aber auch
-                  dabei, falls nötig. Wir starten, wenn Sie bereit sind.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question">
-                Kann ich die Website nachher selbst bearbeiten?
-                <span class="faq-chevron">▾</span>
-              </button>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Ja. Je nach Wunsch baue ich Ihre Website mit einem CMS
-                  (Content-Management-System), sodass Sie Texte, Bilder und
-                  Inhalte selbst ändern können – ohne Programmierkenntnisse.
-                  Alternativ übernehme ich Updates im Rahmen der Wartung.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question">
-                Wie funktioniert die Zahlung?
-                <span class="faq-chevron">▾</span>
-              </button>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  50% Anzahlung zu Projektbeginn, 50% bei Abnahme und Go-Live.
-                  So haben beide Seiten Sicherheit. Keine versteckten Kosten –
-                  alles wird im Angebot transparent aufgeführt.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question">
-                Was ist, wenn ich mit dem Design nicht zufrieden bin?
-                <span class="faq-chevron">▾</span>
-              </button>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Kein Problem. Jedes Paket beinhaltet eine Nachbesserungsphase.
-                  Wir arbeiten gemeinsam so lange, bis Sie zu 100% zufrieden
-                  sind. Ihr Feedback ist Teil des Prozesses, nicht ein
-                  Hindernis.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question">
-                Arbeiten Sie auch mit Hosting und Domain?
-                <span class="faq-chevron">▾</span>
-              </button>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Ja. Ich berate Sie bei der Wahl des richtigen Hostings und der
-                  Domain-Registrierung und kann den technischen Setup
-                  übernehmen. Auf Wunsch auch vollständig – Sie bekommen eine
-                  fertige Website, komplett online.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ═══════════ CONTACT ═══════════ -->
-    <section id="contact">
-      <div class="container">
-        <div
-          class="section-header"
-          style="text-align: center; max-width: 560px; margin: 0 auto 60px"
-        >
-          <span class="label reveal" style="justify-content: center"
-            >Kontakt</span
-          >
-          <h2 class="display-lg reveal">
-            Bereit zu<br /><span class="text-gradient text-italic"
-              >starten?</span
-            >
-          </h2>
-          <p class="body-lg reveal" style="margin-top: 12px">
-            Kostenlose Anfrage – keine Verpflichtung. Antwort innerhalb von 24
-            Stunden.
-          </p>
-        </div>
-
-        <div class="contact-grid">
-          <div class="reveal-left">
-            <div class="contact-info-header">
-              <h3
-                class="display-md"
-                style="font-size: clamp(24px, 2.5vw, 32px)"
-              >
-                Lassen Sie uns<br />sprechen.
-              </h3>
-            </div>
-            <div class="contact-items">
-              <div class="contact-item">
-                <div class="contact-icon">✉️</div>
-                <div>
-                  <h4>E-Mail</h4>
-                  <a href="mailto:hallo@gabaweb.at">hallo@gabaweb.at</a>
-                </div>
-              </div>
-              <div class="contact-item">
-                <div class="contact-icon">📍</div>
-                <div>
-                  <h4>Standort</h4>
-                  <p>Österreich — Projekte österreichweit</p>
-                </div>
-              </div>
-              <div class="contact-item">
-                <div class="contact-icon">⏱️</div>
-                <div>
-                  <h4>Antwortzeit</h4>
-                  <p>In der Regel innerhalb von 24 Stunden</p>
-                </div>
-              </div>
-              <div class="contact-item">
-                <div class="contact-icon">💬</div>
-                <div>
-                  <h4>Erstgespräch</h4>
-                  <p>Kostenlos & unverbindlich — 30 Minuten</p>
-                </div>
+              <div class="contact-audit-box">
+                <h4>Kostenlose Website-Analyse</h4>
+                <p>
+                  Schick mir deine aktuelle Website (oder die der Konkurrenz) –
+                  ich schaue sie mir an und zeige dir konkret, wo Potenzial
+                  liegt. Ohne Verpflichtung, ohne Verkaufsdruck.
+                </p>
               </div>
             </div>
 
-            <div class="contact-audit-box">
-              <h4>Kostenlose Website-Analyse</h4>
-              <p>
-                Ich analysiere Ihre aktuelle Website (oder die der Konkurrenz)
-                und zeige Ihnen konkret, wo Potenzial liegt – ohne
-                Verpflichtung, ohne Verkaufsdruck.
-              </p>
-            </div>
-          </div>
-
-          <div class="reveal-right">
-            <div class="contact-form-card">
-              <form id="contactForm" onsubmit="handleSubmit(event)">
-                <div class="form-row">
+            <div class="reveal-right">
+              <div class="contact-form-card">
+                <form id="contactForm" onsubmit="handleSubmit(event)">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="name">Dein Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="Max Mustermann"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Deine E-Mail</label>
+                      <input
+                        type="email"
+                        id="email"
+                        placeholder="max@firma.at"
+                        required
+                      />
+                    </div>
+                  </div>
                   <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="business">Dein Unternehmen</label>
                     <input
                       type="text"
-                      id="name"
-                      placeholder="Max Mustermann"
-                      required
+                      id="business"
+                      placeholder="z. B. Friseur, Restaurant, Elektriker …"
                     />
                   </div>
                   <div class="form-group">
-                    <label for="email">E-Mail</label>
-                    <input
-                      type="email"
-                      id="email"
-                      placeholder="max@firma.at"
-                      required
-                    />
+                    <label for="package">Paket</label>
+                    <select id="package">
+                      <option value="">Paket auswählen (optional)</option>
+                      <option value="starter">Starter — ab 590 €</option>
+                      <option value="business">Business — ab 890 €</option>
+                      <option value="premium">Premium — ab 1.190 €</option>
+                      <option value="analyse">Nur kostenlose Analyse</option>
+                    </select>
                   </div>
+                  <div class="form-group">
+                    <label for="message">Deine Nachricht</label>
+                    <textarea
+                      id="message"
+                      placeholder="Erzähl mir von deinem Unternehmen, deinen Zielen oder was du dir vorstellst …"
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="form-submit" id="submitBtn">
+                    ✦ Kostenlose Anfrage senden
+                  </button>
+                  <p class="form-privacy">
+                    🔒 Deine Daten werden vertraulich behandelt.
+                  </p>
+                </form>
+                <div class="success-state" id="successMsg">
+                  <div class="success-icon">✅</div>
+                  <div class="success-title">Anfrage erhalten!</div>
+                  <p class="success-sub">
+                    Ich melde mich innerhalb von 24 Stunden. Danke für dein
+                    Vertrauen!
+                  </p>
                 </div>
-                <div class="form-group">
-                  <label for="business">Ihr Unternehmen</label>
-                  <input
-                    type="text"
-                    id="business"
-                    placeholder="z. B. Friseur, Restaurant, Elektriker …"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="package">Paket</label>
-                  <select id="package">
-                    <option value="">Paket auswählen (optional)</option>
-                    <option value="starter">Starter — ab 499 €</option>
-                    <option value="business">Business — ab 999 €</option>
-                    <option value="premium">Premium — ab 1.499 €</option>
-                    <option value="analyse">Nur kostenlose Analyse</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="message">Ihre Nachricht</label>
-                  <textarea
-                    id="message"
-                    placeholder="Erzählen Sie mir von Ihrem Unternehmen, Ihren Zielen oder was Sie sich vorstellen …"
-                  ></textarea>
-                </div>
-                <button type="submit" class="form-submit" id="submitBtn">
-                  ✦ Kostenlose Anfrage senden
-                </button>
-                <p class="form-privacy">
-                  🔒 Ihre Daten werden vertraulich behandelt.
-                </p>
-              </form>
-              <div class="success-state" id="successMsg">
-                <div class="success-icon">✅</div>
-                <div class="success-title">Anfrage erhalten!</div>
-                <p class="success-sub">
-                  Ich melde mich innerhalb von 24 Stunden. Danke für Ihr
-                  Vertrauen.
-                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <!-- end page-kontakt -->
 
     <!-- ═══════════ FOOTER ═══════════ -->
     <footer>
       <div class="container">
         <div class="footer-inner">
           <div class="footer-logo">
-            <span
-              style="
-                width: 6px;
-                height: 6px;
-                background: var(--gold);
-                border-radius: 50%;
-                display: inline-block;
-                box-shadow: 0 0 8px var(--gold);
-              "
-            ></span>
-            GabaWeb Studio
+            <img src="assets/logo.png" alt="" class="footer-logo-img" />
+            <span class="footer-logo-text">GabaWeb</span>
           </div>
           <ul class="footer-links">
-            <li><a href="#portfolio">Projekte</a></li>
-            <li><a href="#services">Leistungen</a></li>
-            <li><a href="#pricing">Preise</a></li>
-            <li><a href="#contact">Kontakt</a></li>
+            <li><a href="#story">Story</a></li>
+            <li><a href="#vergleich">Vergleich</a></li>
+            <li><a href="#preise">Preise</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
           </ul>
-          <p class="footer-copy">© 2025 GabaWeb Studio · Österreich</p>
+          <p class="footer-copy">
+            © 2026 GabaWeb · Lennard Gaba · Niederösterreich
+          </p>
         </div>
       </div>
     </footer>
@@ -3463,49 +3815,179 @@
         document.body.style.overflow = "";
       }
 
-      /* ── INTERSECTION OBSERVER ── */
-      const observerConfig = {
-        threshold: 0.12,
-        rootMargin: "0px 0px -40px 0px",
-      };
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            const delay = parseFloat(entry.target.dataset.delay || 0);
-            setTimeout(() => {
-              entry.target.classList.add("visible");
-            }, delay * 1000);
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      }, observerConfig);
+      /* ═══════════════════════════════════════
+         SPA ROUTER & PAGE TRANSITIONS
+      ═══════════════════════════════════════ */
 
-      // Stagger siblings
-      const staggerGroups = document.querySelectorAll(
-        ".case-grid, .services-list, .process-grid, .pricing-grid",
-      );
-      staggerGroups.forEach((group) => {
-        Array.from(group.children).forEach((child, i) => {
-          child.dataset.delay = i * 0.1;
-          child.classList.add(
-            child.classList.contains("case-card")
-              ? "case-card"
-              : child.classList.contains("service-card")
-                ? "service-card"
-                : child.classList.contains("process-step")
-                  ? "process-step"
-                  : "pricing-card",
-          );
+      // Define which page each hash belongs to
+      const ROUTES = {
+        "": "home",
+        "#": "home",
+        "#home": "home",
+        "#hero": "home",
+        "#vergleich": "vergleich",
+        "#leistungen": "leistungen",
+        "#portfolio": "leistungen",
+        "#process": "leistungen",
+        "#story": "story",
+        "#preise": "preise",
+        "#pricing": "preise",
+        "#faq": "faq",
+        "#kontakt": "kontakt",
+        "#contact": "kontakt",
+      };
+
+      // Wrap all direct children of every page section in flow-item containers
+      // so they animate in sequence.
+      function setupFlowItems() {
+        document.querySelectorAll(".page").forEach((page) => {
+          // Find all section elements within the page
+          const sections = page.querySelectorAll("section");
+          sections.forEach((section) => {
+            // Mark the section's main container for flow animation
+            const container = section.querySelector(".container");
+            if (container) {
+              Array.from(container.children).forEach((child) => {
+                child.classList.add("flow-item");
+              });
+            }
+          });
+          // Ticker also gets flow
+          const ticker = page.querySelector(".ticker-section");
+          if (ticker) ticker.classList.add("flow-item");
         });
+      }
+
+      function getCurrentPage() {
+        const hash = window.location.hash || "";
+        return ROUTES[hash] || "home";
+      }
+
+      function showPage(pageName, isInitial = false) {
+        const allPages = document.querySelectorAll(".page");
+        const targetPage = document.getElementById("page-" + pageName);
+        if (!targetPage) return;
+
+        // Update nav active state
+        document
+          .querySelectorAll(".nav-links a, .mobile-menu a")
+          .forEach((a) => {
+            a.classList.remove("active");
+            const href = a.getAttribute("href") || "";
+            const linkPage = ROUTES[href];
+            if (linkPage === pageName) a.classList.add("active");
+          });
+
+        // If initial, show without transition
+        if (isInitial) {
+          allPages.forEach((p) => {
+            p.classList.remove("active", "entering", "entered");
+          });
+          targetPage.classList.add("active");
+          // Force reflow then trigger entrance
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              targetPage.classList.add("entered");
+              triggerPageEffects(targetPage, pageName);
+            });
+          });
+          return;
+        }
+
+        // Find current visible page and fade it out
+        const currentActive = document.querySelector(".page.active");
+
+        if (currentActive && currentActive === targetPage) {
+          // Same page, just scroll up
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+
+        // Scroll to top instantly (during fade-out)
+        window.scrollTo({ top: 0, behavior: "instant" });
+
+        if (currentActive) {
+          currentActive.classList.remove("entered");
+          currentActive.style.opacity = "0";
+          currentActive.style.transform = "translateY(-15px)";
+        }
+
+        // After fade-out, swap pages and animate in
+        setTimeout(() => {
+          allPages.forEach((p) => {
+            p.classList.remove("active", "entered");
+            p.style.opacity = "";
+            p.style.transform = "";
+            // Reset flow-item state by removing/re-adding to restart transitions
+            p.querySelectorAll(".flow-item").forEach((item) => {
+              item.style.transition = "none";
+              item.style.opacity = "0";
+              item.style.transform = "translateY(24px)";
+            });
+          });
+
+          targetPage.classList.add("active");
+
+          // Force reflow, then start enter animation
+          requestAnimationFrame(() => {
+            // Reset inline styles so CSS transitions take over
+            targetPage.querySelectorAll(".flow-item").forEach((item) => {
+              item.style.transition = "";
+              item.style.opacity = "";
+              item.style.transform = "";
+            });
+            requestAnimationFrame(() => {
+              targetPage.classList.add("entered");
+              triggerPageEffects(targetPage, pageName);
+            });
+          });
+        }, 300);
+      }
+
+      function triggerPageEffects(page, pageName) {
+        // Re-trigger counter animations for any data-count elements on the page
+        page.querySelectorAll("[data-count]").forEach((el) => {
+          const target = parseInt(el.dataset.count);
+          const suffix = el.dataset.suffix || "";
+          el.textContent = "0" + suffix;
+          // Slight delay so counter starts after page enters
+          setTimeout(() => animateCount(el, target, suffix), 400);
+        });
+      }
+
+      // Initialize page system
+      setupFlowItems();
+      showPage(getCurrentPage(), true);
+
+      // Listen to hash changes (back/forward and link clicks)
+      window.addEventListener("hashchange", () => {
+        showPage(getCurrentPage());
       });
 
-      document
-        .querySelectorAll(
-          ".reveal, .reveal-left, .reveal-right, .case-card, .service-card, .process-step, .pricing-card, .problem-item",
-        )
-        .forEach((el) => {
-          revealObserver.observe(el);
-        });
+      // Intercept all internal hash links to use the router
+      document.addEventListener("click", (e) => {
+        const link = e.target.closest("a[href^='#']");
+        if (!link) return;
+        const href = link.getAttribute("href");
+        if (href in ROUTES) {
+          e.preventDefault();
+          // Close mobile menu if open
+          if (
+            document.getElementById("mobileMenu").classList.contains("open")
+          ) {
+            closeMobile();
+          }
+          if (
+            window.location.hash === href ||
+            (href === "#home" && !window.location.hash)
+          ) {
+            // Same page link - scroll up
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else {
+            window.location.hash = href === "#home" ? "" : href;
+          }
+        }
+      });
 
       /* ── COUNTER ANIMATION ── */
       function animateCount(el, target, suffix = "") {
@@ -3520,29 +4002,6 @@
         };
         requestAnimationFrame(update);
       }
-
-      const counterObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const el = entry.target;
-              const target = parseInt(el.dataset.count);
-              const suffix = el.parentElement.textContent.includes("%")
-                ? "%"
-                : el.parentElement.textContent.includes("h")
-                  ? "h"
-                  : "";
-              animateCount(el, target, suffix);
-              counterObserver.unobserve(el);
-            }
-          });
-        },
-        { threshold: 0.5 },
-      );
-
-      document
-        .querySelectorAll("[data-count]")
-        .forEach((el) => counterObserver.observe(el));
 
       /* ── FAQ ACCORDION ── */
       document.querySelectorAll(".faq-question").forEach((btn) => {
@@ -3576,19 +4035,6 @@
           document.getElementById("successMsg").style.display = "block";
         }, 1400);
       }
-
-      /* ── SMOOTH SCROLL ── */
-      document.querySelectorAll('a[href^="#"]').forEach((a) => {
-        a.addEventListener("click", (e) => {
-          const target = document.querySelector(a.getAttribute("href"));
-          if (target) {
-            e.preventDefault();
-            const top =
-              target.getBoundingClientRect().top + window.scrollY - 80;
-            window.scrollTo({ top, behavior: "smooth" });
-          }
-        });
-      });
 
       /* ── BUTTON CLICK PHYSICS ── */
       document
